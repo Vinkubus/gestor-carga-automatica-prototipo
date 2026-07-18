@@ -5,20 +5,50 @@ import type {
   PipelineStep,
   Process,
   ProcessKpis,
+  ProcessStatus,
 } from '../types/process';
 
-function buildPipeline(variant: 'ok' | 'parcial' | 'error'): PipelineStep[] {
+/** Recomputes KPIs after a reprocess run: contracts/documents grow with the new pass,
+ * errors track the resulting status, duplicates drift slightly. */
+export function kpisAfterReprocess(prev: ProcessKpis, status: ProcessStatus): ProcessKpis {
+  const contratosGain = 8 + Math.floor(Math.random() * 25);
+  const documentosGain = 20 + Math.floor(Math.random() * 80);
+  const newErrores =
+    status === 'Con errores'
+      ? 15 + Math.floor(Math.random() * 15)
+      : status === 'Parcial'
+        ? 3 + Math.floor(Math.random() * 6)
+        : 0;
+  const duplicadosChange = Math.floor(Math.random() * 5) - 2;
+  return {
+    contratos: prev.contratos + contratosGain,
+    contratosDelta: contratosGain,
+    documentos: prev.documentos + documentosGain,
+    documentosDelta: documentosGain,
+    errores: newErrores,
+    erroresDelta: Math.abs(prev.errores - newErrores),
+    duplicados: Math.max(0, prev.duplicados + duplicadosChange),
+  };
+}
+
+export function pipelineVariantForStatus(status: ProcessStatus): 'ok' | 'parcial' | 'error' {
+  if (status === 'Con errores') return 'error';
+  if (status === 'Parcial') return 'parcial';
+  return 'ok';
+}
+
+export function buildPipeline(variant: 'ok' | 'parcial' | 'error', failedCount = 7): PipelineStep[] {
   const base: PipelineStep[] = [
     { id: uuid(), title: 'Lectura del repositorio documental', subtitle: 'Conectado exitosamente', status: 'OK' },
     { id: uuid(), title: 'Clasificación taxonómica', subtitle: 'Documentos clasificados', status: 'OK' },
     { id: uuid(), title: 'Validación de duplicidad', subtitle: 'Sin conflictos detectados', status: 'OK' },
-    { id: uuid(), title: 'Carga al gestor documental', subtitle: '7 documentos fallaron', status: 'PARCIAL' },
+    { id: uuid(), title: 'Carga al gestor documental', subtitle: `${failedCount} documentos fallaron`, status: 'PARCIAL' },
     { id: uuid(), title: 'Persistencia de bitácora', subtitle: 'Registro completado', status: 'OK' },
   ];
   if (variant === 'ok') {
     base[3] = { ...base[3], subtitle: 'Carga completada sin incidentes', status: 'OK' };
   } else if (variant === 'error') {
-    base[3] = { ...base[3], subtitle: '23 documentos fallaron', status: 'ERROR' };
+    base[3] = { ...base[3], subtitle: `${failedCount} documentos fallaron`, status: 'ERROR' };
     base[4] = { ...base[4], subtitle: 'Registro completado con advertencias', status: 'PARCIAL' };
   }
   return base;

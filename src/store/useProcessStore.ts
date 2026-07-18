@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { create } from 'zustand';
-import { buildSeedProcesses } from '../lib/seed';
+import { buildPipeline, buildSeedProcesses, kpisAfterReprocess, pipelineVariantForStatus } from '../lib/seed';
 import type { ExecutionHistoryRow, Frequency, Process, ProcessStatus } from '../types/process';
 
 interface NewProcessInput {
@@ -102,6 +102,8 @@ export const useProcessStore = create<ProcessStoreState>((set, get) => ({
       type: 'Reproceso',
       status: newStatus === 'Completado' || newStatus === 'Con errores' || newStatus === 'Parcial' ? newStatus : 'Completado',
     };
+    const newKpis = kpisAfterReprocess(process.kpis, newStatus);
+    const newPipeline = buildPipeline(pipelineVariantForStatus(newStatus), newKpis.errores);
     set((state) => ({
       processes: state.processes.map((p) =>
         p.id === id
@@ -116,6 +118,8 @@ export const useProcessStore = create<ProcessStoreState>((set, get) => ({
                 durationMin: Math.max(5, Math.round(Math.random() * 60)),
                 success: newStatus === 'Completado',
               },
+              kpis: newKpis,
+              pipeline: newPipeline,
               history: [historyRow, ...p.history],
             }
           : p,
