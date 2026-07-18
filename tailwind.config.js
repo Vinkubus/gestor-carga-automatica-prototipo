@@ -1,0 +1,88 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Noto Sans', 'sans-serif'],
+        mono: ['Cousine', 'ui-monospace', 'monospace'],
+        code: ['Cascadia Code', 'ui-monospace', 'Consolas', 'monospace'],
+      },
+      colors: {
+        primary: {
+          100: '#f4f9ff',
+          200: '#ebf4ff',
+          300: '#dbecff',
+          400: '#c3dfff',
+          500: '#9dcaff',
+          700: '#2a7de1',
+          800: '#1255a5',
+        },
+        secondary: {
+          700: '#327396',
+          800: '#1d5878',
+        },
+        neutral: {
+          0: '#ffffff',
+          50: '#f8fbfe',
+          100: '#f0f6fb',
+          200: '#e1e9f0',
+          300: '#cbd5e1',
+          500: '#8d99a5',
+          700: '#4a5864',
+          900: '#222527',
+          950: '#051c2c',
+        },
+        info: {
+          100: '#eaefff',
+          300: '#e3e8ff',
+          400: '#9ca8ff',
+          600: '#6465ff',
+          700: '#514ee0',
+          800: '#413eb1',
+        },
+        success: {
+          100: '#e4f4eb',
+          200: '#e5f5ec',
+          300: '#c0e5d1',
+          400: '#97d4b4',
+          600: '#47b881',
+          700: '#40a179',
+          800: '#006f41',
+        },
+        danger: {
+          100: '#fdeaeb',
+          200: '#ffebee',
+          300: '#ffccd2',
+          700: '#c21418',
+          800: '#bc1214',
+        },
+        warning: {
+          100: '#fffae8',
+          200: '#fff7e1',
+          300: '#ffeab3',
+          700: '#fe9b0e',
+          900: '#985900',
+        },
+        tertiary: {
+          200: '#f2f5e6',
+          800: '#9ca181',
+        },
+      },
+      borderRadius: {
+        lg: '12px',
+        xl: '16px',
+        '2xl': '20px',
+        '3xl': '24px',
+      },
+      boxShadow: {
+        elevation1: '0px 2px 4px rgba(0,0,0,0.04), 0px 1px 1px rgba(0,0,0,0.02)',
+        elevation2: '0px 2px 4px rgba(39,39,39,0.1)',
+        elevation3: '0px 8px 32px rgba(0,0,0,0.08), 0px 2px 20px rgba(0,0,0,0.04)',
+        card: '0px 2px 10px rgba(0,0,0,0.04), 0px 8px 16px rgba(0,0,0,0.08)',
+        modal: '0px 32px 64px rgba(10,20,50,0.22), 0px 8px 24px rgba(10,20,50,0.12)',
+      },
+    },
+  },
+  plugins: [],
+}
