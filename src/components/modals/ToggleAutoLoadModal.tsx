@@ -18,6 +18,7 @@ export function ToggleAutoLoadModal({ process, onCancel, onConfirm }: ToggleAuto
 
   return (
     <ModalShell onClose={onCancel} maxWidth="max-w-[498px]" labelledBy="toggle-modal-title">
+      {(requestClose) => (
       <div className="flex flex-col items-center gap-8 px-10 py-8">
         <div className="flex flex-col items-center gap-4">
           <i className="ri-information-fill text-[56px] text-warning-700" aria-hidden="true" />
@@ -31,20 +32,21 @@ export function ToggleAutoLoadModal({ process, onCancel, onConfirm }: ToggleAuto
         <div className="flex w-full justify-center gap-6">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={() => requestClose()}
             className="flex h-14 flex-1 items-center justify-center rounded-xl border border-secondary-700 bg-primary-100 text-lg font-bold text-secondary-700"
           >
             Cancelar
           </button>
           <button
             type="button"
-            onClick={onConfirm}
+            onClick={() => requestClose(onConfirm)}
             className="flex h-14 flex-1 items-center justify-center rounded-xl bg-primary-700 text-lg font-bold text-primary-100"
           >
             {confirmLabel}
           </button>
         </div>
       </div>
+      )}
     </ModalShell>
   );
 }

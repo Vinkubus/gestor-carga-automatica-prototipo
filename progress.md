@@ -114,9 +114,13 @@ El build de producción pasa (`npm run build`) y no hay errores de TypeScript (`
       el tipo `success` (los 3 call sites actuales — crear proceso, exportar,
       encender/apagar auto-carga — usan ese tipo por default); los tipos `error`/`warning`/
       `info` quedan implementados pero sin un flujo real en la app que los dispare todavía.
-- [x] **Animación de entrada en modales** (2026-07-20): fade-in + desplazamiento sutil
-      (`translateY(12px)→0`), 300ms `ease-in-out`, en `ModalShell.tsx` (cubre los 3 modales).
-      Verificado en navegador real (capturado a mitad de transición).
+- [x] **Animación de entrada y salida en modales** (2026-07-20, ver `Project.md`): fade +
+      desplazamiento sutil (`translateY` 12px), 400ms `ease-in-out`, tanto al aparecer como al
+      cerrarse, en `ModalShell.tsx` (cubre los 3 modales). Se agregó `requestClose` (render-prop)
+      para que Cancelar/Confirmar/Exportar animen la salida antes de desmontarse en vez de
+      desaparecer de golpe. Verificado en navegador real: los 3 modales abren, cierran con
+      animación, y sus acciones (crear proceso, apagar/encender carga, exportar) se siguen
+      ejecutando correctamente.
 - [x] **Fondo de la página de detalle corregido a `#f8fbfe`** (2026-07-20, ver `Project.md`):
       confirmado contra el Figma (nodo `990:21756`) con `get_variable_defs` — el token ya
       existía en Tailwind como `neutral-50`. Se aplicó en un wrapper `min-h-screen w-full` para

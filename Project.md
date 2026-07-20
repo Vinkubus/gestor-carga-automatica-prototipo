@@ -117,10 +117,21 @@ history (array de `ExecutionHistoryRow`).
   procesamiento automático de documentos según la frecuencia configurada." Mismo layout/colores
   que la variante de apagar. Si el diseñador entrega el copy real más adelante, reemplazar en
   `ToggleAutoLoadModal.tsx`.
-- **Animación de entrada en los modales (2026-07-20)**: `ModalShell.tsx` (usado por los 3
-  modales — nuevo proceso, apagar/encender carga, exportar) ahora hace fade-in del fondo oscuro
-  y fade-in + desplazamiento sutil (`translateY(12px)→0`) del panel al aparecer, con
-  `ease-in-out` (curva bezier) en 300ms. Solo animación de entrada, no se pidió salida.
+- **Animación de entrada y salida en los modales (2026-07-20)**: `ModalShell.tsx` (usado por los
+  3 modales — nuevo proceso, apagar/encender carga, exportar) hace fade-in del fondo oscuro y
+  fade-in + desplazamiento sutil (`translateY(12px)→0`) del panel al aparecer, con `ease-in-out`
+  (curva bezier) en 400ms (subido de 300ms a pedido del usuario, "un poco más de tiempo").
+  Al cerrarse hace la animación inversa (fade-out + `translateY(0)→12px`) antes de desmontarse.
+  Como los 3 modales antes llamaban a `onClose`/`onCancel` directamente desde sus propios
+  botones (Cancelar, X, o tras completar una acción) y el padre los desmontaba al instante — sin
+  dejar tiempo para animar la salida — se cambió `ModalShell` para aceptar `children` también
+  como función `(requestClose) => ReactNode`: `requestClose(afterAnimation?)` dispara la
+  animación de salida localmente y solo llama al `onClose` real (o al callback `afterAnimation`,
+  usado por ejemplo para `onConfirm` en `ToggleAutoLoadModal`) pasados los 400ms. Se actualizaron
+  `NewProcessModal.tsx`, `ToggleAutoLoadModal.tsx` y `ExportDateRangeModal.tsx` para usar
+  `requestClose` en vez de llamar a los callbacks del padre directamente. Verificado en
+  navegador real: los 3 modales abren, cierran con animación y ejecutan su acción (crear
+  proceso, apagar/encender carga, exportar) correctamente.
 - **Fondo de la página de detalle (2026-07-20)**: `DetailPage.tsx` no tenía fondo propio y
   heredaba el blanco del `body`. Se confirmó con `get_variable_defs` sobre el nodo Figma
   `990:21756` que la página usa `neutral/50 (#f8fbfe)` de fondo (token que ya existía en

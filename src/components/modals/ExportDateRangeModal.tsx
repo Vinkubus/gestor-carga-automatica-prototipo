@@ -61,10 +61,10 @@ export function ExportDateRangeModal({ onClose }: ExportDateRangeModalProps) {
 
   const canExport = Boolean(rangeStart && rangeEnd);
 
-  function handleExport() {
+  function handleExport(requestClose: (after?: () => void) => void) {
     if (!canExport) return;
-    onClose();
     showToast('Se descargó el archivo con los resultados exportados');
+    requestClose();
   }
 
   const rangeLabel =
@@ -76,6 +76,7 @@ export function ExportDateRangeModal({ onClose }: ExportDateRangeModalProps) {
 
   return (
     <ModalShell onClose={onClose} maxWidth="max-w-[577px]" labelledBy="export-modal-title">
+      {(requestClose) => (
       <div className="flex flex-col items-center gap-6 px-8 py-8">
         <div className="flex flex-col items-center gap-4">
           <i className="ri-share-forward-2-fill text-4xl text-info-600" aria-hidden="true" />
@@ -120,14 +121,14 @@ export function ExportDateRangeModal({ onClose }: ExportDateRangeModalProps) {
         <div className="flex w-full justify-center gap-6">
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => requestClose()}
             className="flex h-14 flex-1 items-center justify-center rounded-xl border border-secondary-700 bg-primary-100 text-lg font-bold text-secondary-700"
           >
             Cancelar
           </button>
           <button
             type="button"
-            onClick={handleExport}
+            onClick={() => handleExport(requestClose)}
             disabled={!canExport}
             className="flex h-14 flex-1 items-center justify-center rounded-xl bg-primary-700 text-lg font-bold text-primary-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -135,6 +136,7 @@ export function ExportDateRangeModal({ onClose }: ExportDateRangeModalProps) {
           </button>
         </div>
       </div>
+      )}
     </ModalShell>
   );
 }

@@ -43,7 +43,7 @@ export function NewProcessModal({ onClose }: NewProcessModalProps) {
 
   const canSubmit = name.trim() !== '' && sourcePath.trim() !== '' && executionTime.trim() !== '' && frequency !== '';
 
-  function handleSubmit() {
+  function handleSubmit(requestClose: (after?: () => void) => void) {
     if (!canSubmit || isSubmitting) return;
     setSubmitting(true);
     setTimeout(() => {
@@ -54,13 +54,15 @@ export function NewProcessModal({ onClose }: NewProcessModalProps) {
         frequency: frequency as Frequency,
       });
       setSubmitting(false);
-      onClose();
       showToast('Se creó un nuevo proceso');
+      requestClose();
     }, 900);
   }
 
   return (
     <ModalShell onClose={onClose} labelledBy="new-process-title">
+      {(requestClose) => (
+      <>
       <div className="border-b border-neutral-300 px-8 pt-6 pb-6">
         <div className="flex items-center gap-2">
           <i className="ri-upload-cloud-2-line text-2xl text-neutral-900" aria-hidden="true" />
@@ -202,7 +204,7 @@ export function NewProcessModal({ onClose }: NewProcessModalProps) {
       <div className="flex justify-end gap-3 border-t border-neutral-300 px-8 py-5">
         <button
           type="button"
-          onClick={onClose}
+          onClick={() => requestClose()}
           disabled={isSubmitting}
           className="rounded-3xl border border-secondary-700 px-6 py-2 text-sm font-semibold text-secondary-700 disabled:opacity-50"
         >
@@ -210,7 +212,7 @@ export function NewProcessModal({ onClose }: NewProcessModalProps) {
         </button>
         <button
           type="button"
-          onClick={handleSubmit}
+          onClick={() => handleSubmit(requestClose)}
           disabled={!canSubmit || isSubmitting}
           className="flex items-center gap-2 rounded-3xl bg-primary-700 px-6 py-2 text-sm font-semibold text-neutral-0 disabled:cursor-not-allowed disabled:opacity-50"
         >
@@ -218,6 +220,8 @@ export function NewProcessModal({ onClose }: NewProcessModalProps) {
           Crear proceso
         </button>
       </div>
+      </>
+      )}
     </ModalShell>
   );
 }
