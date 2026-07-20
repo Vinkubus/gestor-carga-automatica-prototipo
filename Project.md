@@ -117,6 +117,10 @@ history (array de `ExecutionHistoryRow`).
   procesamiento automático de documentos según la frecuencia configurada." Mismo layout/colores
   que la variante de apagar. Si el diseñador entrega el copy real más adelante, reemplazar en
   `ToggleAutoLoadModal.tsx`.
+- **Animación de entrada en los modales (2026-07-20)**: `ModalShell.tsx` (usado por los 3
+  modales — nuevo proceso, apagar/encender carga, exportar) ahora hace fade-in del fondo oscuro
+  y fade-in + desplazamiento sutil (`translateY(12px)→0`) del panel al aparecer, con
+  `ease-in-out` (curva bezier) en 300ms. Solo animación de entrada, no se pidió salida.
 - **Fondo de la página de detalle (2026-07-20)**: `DetailPage.tsx` no tenía fondo propio y
   heredaba el blanco del `body`. Se confirmó con `get_variable_defs` sobre el nodo Figma
   `990:21756` que la página usa `neutral/50 (#f8fbfe)` de fondo (token que ya existía en
