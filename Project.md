@@ -117,6 +117,16 @@ history (array de `ExecutionHistoryRow`).
   procesamiento automático de documentos según la frecuencia configurada." Mismo layout/colores
   que la variante de apagar. Si el diseñador entrega el copy real más adelante, reemplazar en
   `ToggleAutoLoadModal.tsx`.
+- **Fondo de la página de detalle (2026-07-20)**: `DetailPage.tsx` no tenía fondo propio y
+  heredaba el blanco del `body`. Se confirmó con `get_variable_defs` sobre el nodo Figma
+  `990:21756` que la página usa `neutral/50 (#f8fbfe)` de fondo (token que ya existía en
+  `tailwind.config.js`). Se envolvió el contenido (ambos `return`, incluido el caso
+  "proceso no encontrado") en un `<div className="min-h-screen w-full bg-neutral-50">` para que
+  el color cubra todo el viewport de borde a borde, no solo la columna centrada de `max-w-[1500px]`.
+  Las tarjetas internas (banner, pipeline, histórico) ya tenían `bg-neutral-0` explícito, así que
+  siguen viéndose blancas sobre el nuevo fondo gris-azulado, igual que en el Figma. Cambio
+  aplicado solo a `DetailPage`; el concentrador (`ConcentradorPage.tsx`) sigue con fondo blanco
+  porque no se pidió tocarlo.
 - **Corrección de colores de íconos (2026-07-20)**: los 5 íconos de las KPI cards del
   concentrador (`ConcentradorPage.tsx` → `KpiCardOverview.tsx`) no tenían clase de color y
   heredaban el gris oscuro global (`neutral-900` del `body`), en vez del color semántico por

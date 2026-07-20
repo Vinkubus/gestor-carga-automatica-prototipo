@@ -114,6 +114,12 @@ El build de producción pasa (`npm run build`) y no hay errores de TypeScript (`
       el tipo `success` (los 3 call sites actuales — crear proceso, exportar,
       encender/apagar auto-carga — usan ese tipo por default); los tipos `error`/`warning`/
       `info` quedan implementados pero sin un flujo real en la app que los dispare todavía.
+- [x] **Fondo de la página de detalle corregido a `#f8fbfe`** (2026-07-20, ver `Project.md`):
+      confirmado contra el Figma (nodo `990:21756`) con `get_variable_defs` — el token ya
+      existía en Tailwind como `neutral-50`. Se aplicó en un wrapper `min-h-screen w-full` para
+      que cubra todo el viewport, no solo la columna centrada. Verificado en navegador: el
+      concentrador sigue en blanco (no se tocó) y el detalle ahora muestra el fondo gris-azulado
+      con las tarjetas blancas encima.
 - [x] **Colores de íconos corregidos** (2026-07-20, ver decisión en `Project.md`): las 5 KPI
       cards del concentrador ahora pintan cada ícono con el color semántico del Figma
       (`info-600`/`success-600`/`danger-700`/`primary-700`/`warning-700`) en vez del gris oscuro
