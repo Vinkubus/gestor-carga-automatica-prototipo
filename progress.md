@@ -102,6 +102,34 @@ El build de producción pasa (`npm run build`) y no hay errores de TypeScript (`
 
 - [x] Estado compartido entre concentrador y detalle (Zustand, un solo store)
 - [x] Toasts apilables, auto-dismiss 4s, cierre manual (verificado visualmente)
+- [x] **Toast rediseñado al tema Dark del design system** (2026-07-20, ver decisión en
+      `Project.md`): fondo `neutral-900/90` semitransparente, texto blanco, ícono a color por
+      tipo (`success`/`error`/`warning`/`info`), barra de progreso de 4px que crece de izquierda
+      a derecha durante los 4s visibles y dispara el fade-out (~200ms) al llegar al borde
+      derecho; fade-in también de ~200ms. Posición: centrado horizontal, 260px del top. Se
+      agregaron los tokens `success-500`, `danger-600`, `warning-600` a `tailwind.config.js`.
+      Verificado en navegador real: se disparó el toast de "Carga automática apagada/encendida"
+      desde `DetailPage`, confirmando fondo oscuro semitransparente (se alcanza a ver el KPI
+      card detrás), ícono verde, barra creciendo y disolvencia de entrada/salida. Solo se probó
+      el tipo `success` (los 3 call sites actuales — crear proceso, exportar,
+      encender/apagar auto-carga — usan ese tipo por default); los tipos `error`/`warning`/
+      `info` quedan implementados pero sin un flujo real en la app que los dispare todavía.
+- [x] **Colores de íconos corregidos** (2026-07-20, ver decisión en `Project.md`): las 5 KPI
+      cards del concentrador ahora pintan cada ícono con el color semántico del Figma
+      (`info-600`/`success-600`/`danger-700`/`primary-700`/`warning-700`) en vez del gris oscuro
+      heredado por default. Se corrigió el token compartido `success.600` (`#47b881` → `#009942`,
+      valor real de Figma), lo que también ajustó el tono del borde en el banner de
+      `DetailPage.tsx`. El ícono del modal "Exportar resultados" pasó de `neutral-900` a
+      `info-600` (índigo), fiel al Figma aunque no sea el hex exacto (`#7876ff`, inconsistente
+      entre archivos de Figma — se usó el token existente por decisión del usuario). Verificado
+      visualmente en navegador real en ambas pantallas.
+- [x] **Desplazamiento vertical de 24px agregado al toast** (2026-07-20): entra con
+      `translateY(-24px)→0` (arriba hacia abajo) + fade-in, sale con `translateY(0)→-24px`
+      (abajo hacia arriba, mismo recorrido en reversa) + fade-out, ambos en 200ms. Verificado con
+      un script inyectado en la página real (`getComputedStyle` del toast) que confirmó
+      `transform: matrix(1,0,0,1,0,-24)` y `opacity: 0` tanto en el instante de aparición como
+      en el de cierre, y visualmente que el estado en reposo (posición 260px del top, fondo,
+      barra de progreso) no se vio afectado.
 - [x] Escape cierra modales (verificado)
 - [x] Click fuera del modal cierra (implementado en `ModalShell.tsx`, **no probado
       interactivamente** en esta sesión — Escape sí se probó)

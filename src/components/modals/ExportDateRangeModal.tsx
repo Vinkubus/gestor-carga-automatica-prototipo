@@ -78,7 +78,7 @@ export function ExportDateRangeModal({ onClose }: ExportDateRangeModalProps) {
     <ModalShell onClose={onClose} maxWidth="max-w-[577px]" labelledBy="export-modal-title">
       <div className="flex flex-col items-center gap-6 px-8 py-8">
         <div className="flex flex-col items-center gap-4">
-          <i className="ri-share-forward-2-fill text-4xl text-neutral-900" aria-hidden="true" />
+          <i className="ri-share-forward-2-fill text-4xl text-info-600" aria-hidden="true" />
           <div className="flex flex-col items-center gap-2 text-center text-neutral-700">
             <p id="export-modal-title" className="text-xl font-bold">
               Exportar resultados

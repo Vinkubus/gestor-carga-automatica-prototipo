@@ -89,11 +89,11 @@ export function ConcentradorPage() {
 
           {/* KPI cards */}
           <div className="flex w-full flex-wrap items-stretch rounded-lg border border-neutral-300">
-            <KpiCardOverview icon="ri-upload-cloud-line" iconBg="bg-info-100" value={processes.length} label="Configurados" />
-            <KpiCardOverview icon="ri-checkbox-circle-line" iconBg="bg-success-100" value={counts.Completado} label="Completados" />
-            <KpiCardOverview icon="ri-error-warning-line" iconBg="bg-danger-100" value={counts['Con errores']} label="Con error" />
-            <KpiCardOverview icon="ri-restart-line" iconBg="bg-primary-200" value={counts['En proceso']} label="En proceso" />
-            <KpiCardOverview icon="ri-file-damage-line" iconBg="bg-warning-200" value={counts.Parcial} label="Parcial" />
+            <KpiCardOverview icon="ri-upload-cloud-line" iconBg="bg-info-100" iconColor="text-info-600" value={processes.length} label="Configurados" />
+            <KpiCardOverview icon="ri-checkbox-circle-line" iconBg="bg-success-100" iconColor="text-success-600" value={counts.Completado} label="Completados" />
+            <KpiCardOverview icon="ri-error-warning-line" iconBg="bg-danger-100" iconColor="text-danger-700" value={counts['Con errores']} label="Con error" />
+            <KpiCardOverview icon="ri-restart-line" iconBg="bg-primary-200" iconColor="text-primary-700" value={counts['En proceso']} label="En proceso" />
+            <KpiCardOverview icon="ri-file-damage-line" iconBg="bg-warning-200" iconColor="text-warning-700" value={counts.Parcial} label="Parcial" />
           </div>
         </div>
 

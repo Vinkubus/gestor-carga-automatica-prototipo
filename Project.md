@@ -41,6 +41,7 @@ reinicia a la semilla original (`src/lib/seed.ts`) en cada reload de página.
 | 3. Detalle de proceso | `990:21756` | `src/pages/DetailPage.tsx` |
 | 4. Modal confirmación apagado/encendido | `991:22220` | `src/components/modals/ToggleAutoLoadModal.tsx` |
 | 5. Modal selección de rango de fechas | `991:26599` | `src/components/modals/ExportDateRangeModal.tsx` + `DateRangeCalendar.tsx` |
+| 6. Toast (tema Dark, variantes Success/Error/Warning/Info) | Archivo DS Components (`qeuLcrMUFyrsmDDwxNRKRN`), nodo `71:187` | `src/components/ui/ToastViewport.tsx` |
 
 Si se necesita volver a leer el Figma (para agregar una pantalla nueva, corregir un detalle
 visual, etc.), usar el MCP de Figma (`mcp__plugin_figma_figma__get_design_context`) con ese
@@ -116,6 +117,50 @@ history (array de `ExecutionHistoryRow`).
   procesamiento automático de documentos según la frecuencia configurada." Mismo layout/colores
   que la variante de apagar. Si el diseñador entrega el copy real más adelante, reemplazar en
   `ToggleAutoLoadModal.tsx`.
+- **Corrección de colores de íconos (2026-07-20)**: los 5 íconos de las KPI cards del
+  concentrador (`ConcentradorPage.tsx` → `KpiCardOverview.tsx`) no tenían clase de color y
+  heredaban el gris oscuro global (`neutral-900` del `body`), en vez del color semántico por
+  tipo que muestra el Figma del concentrador (nodo `990:20387`, archivo
+  `kFWXg9eK53JnyrjCI2RCf0`). Se agregó la prop `iconColor` a `KpiCardOverview` y se fijó, por
+  tarjeta: Configurados `text-info-600`, Completados `text-success-600`, Con error
+  `text-danger-700`, En proceso `text-primary-700`, Parcial `text-warning-700` (verificados con
+  `get_variable_defs` sobre ese nodo). De paso se corrigió el token **`success.600`** en
+  `tailwind.config.js`, que tenía un valor equivocado (`#47b881`) de una sesión anterior; el
+  valor real de Figma es `#009942` (confirmado en dos archivos distintos: este nodo y el toast).
+  Esto también cambió el tono del borde `border-success-600` en el banner de `DetailPage.tsx`
+  (más verde/saturado que antes) — cambio aceptado explícitamente por el usuario.
+  También se corrigió el ícono del modal "Exportar resultados" (`ExportDateRangeModal.tsx`):
+  estaba en `text-neutral-900` y el Figma (nodo `991:27817`/`991:27818`, mismo archivo) lo pinta
+  de índigo. Se leyó el SVG exportado directamente y su hex exacto es `#7876ff`, que no coincide
+  con ningún token `info` existente (el archivo "DS Components" define `info/700` como
+  `#514ee0`, una inconsistencia entre archivos de Figma). Por decisión del usuario se reusó el
+  token ya existente **`info-600` (`#6465ff`)** en vez de crear un token nuevo solo para ese hex.
+- **Rediseño del Toast (tema Dark del design system)**: el toast original era una tarjeta clara
+  fija en la esquina inferior derecha, sin variantes por tipo. Se reemplazó por el componente
+  `Toast` del archivo Figma "DS Components" (nodo `71:187`), solo en su variante **Dark**: fondo
+  `neutral/900` con `opacity-90` (semitransparente), texto blanco, ícono a color según el tipo de
+  feedback. Se agregó `type: 'success'|'error'|'warning'|'info'` a `ToastItem`
+  (`useToastStore.ts`, default `'success'` para no romper los 3 call sites existentes, que siguen
+  siendo mensajes de confirmación). Cada toast tiene una barra de 4px bajo el contenido que crece
+  de izquierda a derecha durante los 4s que el toast está visible; al llegar al borde derecho el
+  toast se disuelve (fade-out ~200ms) y se remueve del store. También hay fade-in (~200ms) al
+  aparecer. El toast ahora se posiciona centrado horizontalmente, a 260px del top (antes:
+  esquina inferior derecha). El auto-dismiss por `setTimeout` en el store se eliminó: ahora el
+  ciclo de vida completo (entrada, barra de progreso, salida) lo controla `ToastViewport.tsx` vía
+  eventos `transitionend`, y `dismissToast(id)` solo remueve del arreglo cuando la animación de
+  salida termina (tanto en el auto-dismiss como en el cierre manual con el botón X).
+  **Actualización 2026-07-20**: se agregó un desplazamiento vertical sutil de 24px sincronizado
+  con la disolvencia (no estaba en el nodo Figma original, pedido explícito del usuario): al
+  aparecer el toast entra con `translateY(-24px)` → `translateY(0)` (de arriba hacia abajo) a la
+  vez que hace fade-in; al cerrarse hace el recorrido inverso, `translateY(0)` → `translateY(-24px)`
+  (de abajo hacia arriba) a la vez que hace fade-out. Ambas transiciones (`opacity` y `transform`)
+  comparten los mismos 200ms/`ease-out` en `ToastViewport.tsx`.
+  Colores agregados a `tailwind.config.js` (tomados de las variables del nodo Figma, no existían
+  antes): `success.500 #00b652`, `danger.600 #e32f2c`, `warning.600 #dea600` (el de `info.600
+  #6465ff` ya existía). **Supuesto sin confirmar pixel a pixel**: el ícono usa el mismo color que
+  su línea de progreso — Figma exporta el ícono como imagen y no pudimos leer su hex exacto, así
+  que se asumió el patrón típico de "un color de marca por tipo de feedback". Si al revisar en
+  Figma el ícono tiene un tono distinto a la línea, avisar para ajustar el token.
 - **Tokens de Tailwind vs. Figma**: el código exportado por el MCP de Figma usa clases como
   `bg-[var(--primary\/700,#2a7de1)]` (variables CSS con `/` en el nombre). Se decidió **no**
   usar ese patrón y en su lugar declarar los tokens con nombres normales en
