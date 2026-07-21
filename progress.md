@@ -1,6 +1,7 @@
 # Progreso
 
-Última actualización: 2026-07-17 (sesión inicial de construcción del prototipo completo).
+Última actualización: 2026-07-20 (sesión de pulido visual: toast, colores, fondo de detalle,
+animación de modales — ver resumen de cierre al final del documento).
 
 ## Estado general: ✅ Funcional, las 5 pantallas construidas y verificadas en navegador real
 
@@ -177,3 +178,44 @@ El build de producción pasa (`npm run build`) y no hay errores de TypeScript (`
   definitivo, o hay copy real del equipo de diseño/producto que deba reemplazarlo?
 - ¿Hay una paleta de "Desactivado"/"Programado" oficial en el design system, o los tokens neutral/
   info elegidos en esta sesión (sin referencia directa en el Figma) son aceptables?
+- El ícono del modal "Exportar resultados" quedó en `info-600` (`#6465ff`) por ser el token ya
+  existente más cercano, pero el hex exacto que exporta el archivo de la app es `#7876ff`
+  (ver decisión documentada en `Project.md`). Si el equipo de diseño concilia esa inconsistencia
+  entre archivos de Figma, ajustar aquí.
+
+## Cierre de sesión — 2026-07-20 (pulido visual: toast, colores, fondo, animaciones)
+
+Sesión de seguimiento sobre el prototipo ya construido (ver sesión 2026-07-17 arriba). No se
+tocó lógica de negocio ni datos — todo el trabajo fue visual/UX, guiado por Figma y por
+indicaciones directas del usuario. Cambios, en orden:
+
+1. **Rediseño del toast** al tema Dark del design system (fondo oscuro semitransparente, texto
+   blanco, ícono a color, barra de progreso por tipo de feedback que crece y dispara el
+   auto-cierre, fade in/out, desplazamiento vertical de 24px, reposicionado a 260px del top
+   centrado). Detalle completo en la sección "Transversales" arriba y en `Project.md`.
+2. **Corrección de colores de íconos** en las KPI cards del concentrador y en el modal de
+   exportar, que heredaban el gris oscuro global en vez del color semántico del Figma. De paso
+   se corrigió el token `success.600` (tenía un hex equivocado de una sesión anterior).
+3. **Fondo de la página de detalle** corregido a `#f8fbfe` (`neutral-50`), confirmado contra el
+   Figma, sin tocar el fondo blanco del concentrador.
+4. **Animación de entrada y salida en los 3 modales** (fade + desplazamiento sutil, 400ms
+   ease-in-out), incluyendo el refactor de `ModalShell` para animar el cierre antes de
+   desmontarse (`requestClose` render-prop).
+
+**Commits de esta sesión** (todos pusheados a `origin/main`, working tree limpio al cerrar):
+- `3171b07` — feat: redesign toast to DS dark theme and fix icon color tokens
+- `160f88c` — fix: give detail page its own #f8fbfe background per Figma
+- `d1a7f9e` — feat: add subtle fade+slide entrance animation to modals
+- `83b635b` — feat: animate modal close, not just open, and slow the timing down
+
+**Verificación**: todo se probó interactivamente en navegador real (Chrome, vía CDP) — abrir/
+cerrar los 3 modales, disparar el toast desde el flujo real de apagar/encender carga automática,
+y confirmar visualmente ambas páginas. No se corrió el flujo completo de exportar con selección
+de rango real en esta sesión (se probó Cancelar y la apertura, no un click completo en
+"Exportar" con fechas seleccionadas) — pendiente si se quiere una verificación exhaustiva.
+
+**No verificado / pendiente para una próxima sesión**:
+- Los tipos de toast `error`/`warning`/`info` (colores e íconos ya implementados) no tienen
+  ningún flujo real en la app que los dispare — solo se ha probado `success`.
+- El click completo de "Exportar" (con rango de fechas elegido) tras el refactor de
+  `ModalShell` no se re-verificó end-to-end esta sesión, solo Cancelar y la apertura.

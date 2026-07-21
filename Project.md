@@ -61,7 +61,8 @@ src/
     seed.ts                  6 procesos semilla + generador de pipeline/historial/KPIs
   store/
     useProcessStore.ts       estado de procesos: addProcess, toggleAutoLoad, reprocess, setExecuting
-    useToastStore.ts         toasts apilables con auto-dismiss (4s)
+    useToastStore.ts         toasts apilables, tipo success/error/warning/info; el ciclo de
+                             vida (entrada, barra de 4s, salida) lo controla ToastViewport.tsx
   components/
     ui/                      StatusBadge, Chip, KpiCardOverview, KpiCardDetail, ModalShell, ToastViewport
     modals/                  NewProcessModal, ToggleAutoLoadModal, ExportDateRangeModal, DateRangeCalendar
